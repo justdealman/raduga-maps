@@ -456,6 +456,101 @@ $(document).ready(function() {
 		$('[data-film]').removeClass('active');
 		$(this).addClass('active');
 	}).filter(':first').click();
+	if ( $('.cinema-modal').length > 0 ) {
+ 		$('.cinema-modal > div').append('<span class="close"></span>');
+ 		$('[data-cinema="open"]').bind('click', function(e) {
+ 			e.preventDefault();
+ 			var t = 0;
+ 			if ( $('.enabled').length > 0 ) {
+ 				$('.cinema-modal').css({
+ 					'top': t+'px'
+ 				}).stop(true,true).fadeIn(250);
+ 				$.fn.fullpage.setMouseWheelScrolling(false);
+ 			}
+ 			else {
+ 				var t = $(document).scrollTop();
+ 				$('.cinema-modal').css({
+ 					'top': t+'px'
+ 				}).stop(true,true).fadeIn(250);
+ 			}
+ 			$('.fade').stop(true,true).fadeIn(250);
+ 		});
+ 		$('.fade, .cinema-modal .close').bind('click', function() {
+ 			$('.cinema-modal, .fade').stop(true,true).fadeOut(250);
+ 			if ( $('.enabled').length > 0 ) {
+ 				$.fn.fullpage.setMouseWheelScrolling(true);
+ 			}
+ 		});
+ 		$('.cinema-modal').click(function() {
+ 			$('.cinema-modal, .fade').stop(true,true).fadeOut(250);
+ 			if ( $('.enabled').length > 0 ) {
+ 				$.fn.fullpage.setMouseWheelScrolling(true);
+ 			}
+ 		});
+ 		$('.cinema-modal > div').click(function(event){
+ 			event.stopPropagation();
+ 		});
+ 	}
+ 	 $('.cinema-modal > div > div').each(function() {
+  $(this).find('.schedule .nav ul li').bind('click', function(e) {
+   e.preventDefault();
+	  console.log(123);
+   $(this).parents('.nav').siblings('[data-tab="'+$(this).attr('data-tab-open')+'"]').show().siblings('[data-tab]').hide();
+   $(this).addClass('active').siblings().removeClass();
+  }).filter(':first').click();
+ });
+ $('[data-film-open]').bind('click', function(e) {
+  e.preventDefault();
+  var film = $(this).data('film-open');
+  // Информация о фильме
+	 $('div[data-film-more=1]').hide();
+	 $('div[data-film-more=1] .schedule').html('<div class="nav"></div>');
+  $.ajax({
+  	type : 'post',
+  	url : '../php/ajax_film.php',
+  	data : {
+  		id : film
+  	},
+  	success : function(data){
+		var data = JSON.parse(data);
+			//console.log(data.NAME);
+			$('div[data-film-more=1] h2').html(data.BASE.fields.NAME); // Название
+		    $('div[data-film-more=1] .general .info h3').html('Ограничения: '+data.PROP.RESTRICTIONS.VALUE); // Ограничение
+			$('div[data-film-more=1] li[data-attr=length]').html('<span>Продолжительность фильма:</span> ' + data.PROP.LENGTH.VALUE); // Продолжительность фильма
+			$('div[data-film-more=1] li[data-attr=style]').html('<span>Жанр:</span> ' + data.PROP.GENRE.VALUE); // Жанр
+
+			$('div[data-film-more=1] li[data-attr=to]').html('<span>На экранах до:</span> ' + data.PROP.SCREENSTO.VALUE); // На экранах до
+			$('div[data-film-more=1] li[data-attr=country]').html('<span>Производство:</span> ' + data.PROP.COUNTRY.VALUE); // Страна
+			$('div[data-film-more=1] li[data-attr=starring]').html('<span>В ролях:</span> ' + data.PROP.ROLES.VALUE); // В ролях
+			$('div[data-film-more=1] li[data-attr=producer]').html('<span>Режиссёр:</span> ' + data.PROP.DIRECTOR.VALUE); // Режиссер
+			$('div[data-film-more=1] li[data-attr=writer]').html('<span>Сценарист:</span> ' + data.PROP.SCREENWRITTER.VALUE); // Сценарист
+
+			$('div[data-film-more=1] .pic').html('<img src="'+data.IMG.src+'">'); // Картинка
+			$('div[data-film-more=1] .video').html(data.PROP.TRAILER.VALUE.TEXT); // Видео
+			$('div[data-film-more=1] .description p').html(data.BASE.fields.PREVIEW_TEXT); // Описание
+		//console.log(data.PROP.RESTRICTIONS.VALUE);
+  	} 
+  })
+	 // Сеансы
+	 $.ajax({
+		 type : 'post',
+		 url : '../php/ajax_session.php',
+		 data : {
+			 id : film
+		 },
+		 success : function(data){
+			 var data = JSON.parse(data);
+			 $('div[data-film-more=1] .nav').html(data.tab);
+			 $('div[data-film-more=1] .schedule').append(data.ses);
+			 $('.nav ul li[data-tab-open=0]').addClass('active');
+			 $('div[data-film-more=1] .schedule .tab[data-tab=0]').show();
+			 $('div[data-film-more=1]').show();
+		 }
+	 })
+  //$('[data-film-open]').removeClass('active');
+  //$(this).addClass('active');
+//  $('[data-film-more="'+$(this).attr('data-film-open')+'"]').show().siblings('[data-film-more]').hide();
+ }).filter(':first').click();
 });
 $(window).resize(function() {
 	if ( $('.introduction').length > 0 ) {
@@ -476,3 +571,13 @@ $(window).load(function() {
 		$('.new-panel').delay(1500).fadeIn(250);
 	}
 });
+
+/**/
+function ses_tab(i) {
+	//console.log(i);
+	$('div[data-film-more=1] .tab').hide();
+	$('div[data-film-more=1] .tab[data-tab=' + i + ']').show();
+	$('.nav ul li').removeClass('active');
+	$('.nav ul li[data-tab-open='+i+']').addClass('active');
+	return false;
+}
