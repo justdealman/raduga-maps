@@ -2068,17 +2068,17 @@ var s3_f2 = {
 	},
 	area_13: {
 		href: '',
-		title: 'Боулинг',
+		title: 'Читай город',
 		space: '13',
 		type: 't18',
-		path: 'M 797 48 L 797 92 L 806.5 92 L 816 92 L 816 84.5 L 816 77 L 886 77 L 956 77 L 956 40.5 L 956 4 L 876.5 4 L 797 4 L 797 48Z'
+		path: 'M797,75L797,146L806.5,146L816,146L816,111.5L816,77L886,77L956,77L956,40.5L956,4L876.5,4L797,4L797,75Z'
 	},
 	area_14: {
 		href: '/riviera/cafe/sushi-bar-obezyana/',
 		title: 'Обезьяна',
 		space: '14',
 		type: 't17',
-		path: 'M 819 87.5 L 819 95 L 808 95 L 797 95 L 797 120.5 L 797 146 L 876.5 146 L 956 146 L 956 113 L 956 80 L 887.5 80 L 819 80 L 819 87.5Z'
+		path: 'M819,113L819,146L887.5,146L956,146L956,113L956,80L887.5,80L819,80L819,113Z'
 	},
 	area_15: {
 		href: '/riviera/stores/elektronika-i-svyaz/m-video/',
